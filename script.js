@@ -1,39 +1,47 @@
 let model;
+const modelURL = './model.json'; // Ensure this matches your file name
 
-// 1. Load the model
-async function init() {
+async function loadModel() {
     try {
-        model = await tf.loadLayersModel('./model/model.json');
-        document.getElementById('status').innerText = 'Model loaded. Upload an image!';
-    } catch (err) {
-        document.getElementById('status').innerText = 'Error loading model: ' + err;
+        console.log("Loading model...");
+        // Ensure tf is available before this call
+        model = await tf.loadLayersModel(modelURL);
+        console.log("Model loaded successfully!");
+    } catch (error) {
+        console.error("Error loading model:", error);
     }
 }
 
-// 2. Handle Image Upload & Prediction
+// Handle Image Upload
 document.getElementById('imageUpload').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const imgElement = document.getElementById('imagePreview');
-    imgElement.src = URL.createObjectURL(file);
-    imgElement.style.display = 'block';
+    // Display image
+    const imagePreview = document.getElementById('imagePreview');
+    imagePreview.src = URL.createObjectURL(file);
+    imagePreview.style.display = 'block';
 
-    imgElement.onload = async () => {
-        const tensor = tf.browser.fromPixels(imgElement)
-            .resizeNearestNeighbor([224, 224]) // Adjust to your model's input size
-            .expandDims(0)
-            .toFloat()
-            .div(tf.scalar(255)); // Normalization
-
-        const predictions = await model.predict(tensor).data();
-        displayResults(predictions);
+    // Wait for image to load to predict
+    imagePreview.onload = async () => {
+        await predict(imagePreview);
     };
 });
 
-function displayResults(predictions) {
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = `Prediction: ${predictions}`;
+async function predict(imageElement) {
+    if (!model) return;
+
+    // Preprocessing (Resize and normalize based on your model's needs)
+    let tensor = tf.browser.fromPixels(imageElement)
+        .resizeNearestNeighbor([224, 224]) // Resize to model input
+        .toFloat()
+        .expandDims();
+
+    // Prediction
+    const prediction = await model.predict(tensor).data();
+    document.getElementById('result').innerText = `Prediction: ${prediction}`;
+    console.log(prediction);
 }
 
-init();
+// Initialize
+loadModel();
