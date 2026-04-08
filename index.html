@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>TF.js Deployment</title>
-    <!-- Load TensorFlow.js -->
-    <script src="https://jsdelivr.net"></script>
+    <title>TF.js Image Classifier</title>
+    <!-- Load TensorFlow.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 </head>
 <body>
-    <h1>Upload Image for Classification</h1>
+    <h1>Image Classification</h1>
     <input type="file" id="imageUpload" accept="image/*">
     <br><br>
     <img id="imagePreview" style="max-width: 300px; display: none;" />
-    <p id="status">Loading model...</p>
-    <div id="results"></div>
+    <div id="result">Upload an image to start...</div>
 
     <script src="script.js"></script>
 </body>
