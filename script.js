@@ -5,7 +5,7 @@ async function loadModel() {
     const status = document.getElementById('result');
     status.innerText = "Loading model...";
     // Point to the relative path of your model.json
-    model = await tf.loadLayersModel('model/model.json'); 
+    model = await tf.loadLayersModel('tm-model/model.json'); 
     status.innerText = "Model loaded! Ready for upload.";
 }
 
@@ -32,7 +32,7 @@ document.getElementById('imageUpload').addEventListener('change', async (event) 
         const predictions = await model.predict(tensor).data();
         
         // 4. Display results (Assumes a classification model)
-        status.innerText = `Prediction: ${predictions}`; 
+        status.innerText = `Prediction (Normal , Defective): ${predictions}`; 
     };
 });
 
